@@ -1,0 +1,89 @@
+# =========================
+# Visual Studio / Rider
+# =========================
+
+.vs/
+.idea/
+*.user
+*.userosscache
+*.suo
+*.rsuser
+
+# =========================
+# Build Results
+# =========================
+
+**/bin/
+**/obj/
+
+# =========================
+# Visual Studio Code
+# =========================
+
+.vscode/
+
+# =========================
+# .NET
+# =========================
+
+*.dll
+*.exe
+*.pdb
+
+# =========================
+# Test Results
+# =========================
+
+TestResults/
+**/TestResults/
+
+# =========================
+# Logs
+# =========================
+
+*.log
+logs/
+**/logs/
+
+# =========================
+# NuGet
+# =========================
+
+*.nupkg
+*.snupkg
+.nuget/
+
+# =========================
+# ASP.NET Core Secrets
+# =========================
+
+# Development / Production settings
+# containing connection strings, JWT secrets, API keys, etc.
+
+**/appsettings.Development.json
+**/appsettings.Production.json
+
+# Local settings
+**/appsettings.Local.json
+
+# =========================
+# Environment Variables
+# =========================
+
+.env
+.env.*
+!.env.example
+
+# =========================
+# OS Files
+# =========================
+
+.DS_Store
+Thumbs.db
+
+# =========================
+# Publish
+# =========================
+
+**/publish/
+**/Publish/

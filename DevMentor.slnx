@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="DevMentor.API/DevMentor.API.csproj" />
+  <Project Path="DevMentor.Application/DevMentor.Application.csproj" />
+  <Project Path="DevMentor.Domain/DevMentor.Domain.csproj" />
+  <Project Path="DevMentor.Infrastructure/DevMentor.Infrastructure.csproj" />
+</Solution>
