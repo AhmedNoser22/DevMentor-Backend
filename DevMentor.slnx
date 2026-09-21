@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+  </Folder>
   <Project Path="DevMentor.API/DevMentor.API.csproj" />
   <Project Path="DevMentor.Application/DevMentor.Application.csproj" />
   <Project Path="DevMentor.Domain/DevMentor.Domain.csproj" />
