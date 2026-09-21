@@ -4,7 +4,7 @@ public class QuestionOption : BaseEntity
 {
     private QuestionOption() { }
 
-    internal QuestionOption(string text, bool isCorrect)
+    internal    QuestionOption(string text, bool isCorrect)
     {
         if (string.IsNullOrWhiteSpace(text))
         {
