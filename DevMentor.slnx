@@ -2,6 +2,10 @@
   <Folder Name="/Solution Items/">
     <File Path=".gitignore" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="DevMentor.Application.Tests/DevMentor.Application.Tests.csproj" Id="52dac2c7-e126-40d6-bb90-9f613ff93b84" />
+    <Project Path="DevMentor.Domain.Tests/DevMentor.Domain.Tests.csproj" Id="5e6d1e3b-ade5-42d4-a1a0-84894a09feb5" />
+  </Folder>
   <Project Path="DevMentor.API/DevMentor.API.csproj" />
   <Project Path="DevMentor.Application/DevMentor.Application.csproj" />
   <Project Path="DevMentor.Domain/DevMentor.Domain.csproj" />

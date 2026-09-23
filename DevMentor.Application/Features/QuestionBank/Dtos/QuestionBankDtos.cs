@@ -1,6 +1,10 @@
-﻿namespace DevMentor.Application.Features.QuestionBank.Dtos;
+﻿using DevMentor.Domain.Enums;
+
+namespace DevMentor.Application.Features.QuestionBank.Dtos;
 
 public record GenerateQuestionsRequest(TechDomain Domain, Level Level, int Count);
+
+public record GenerateQuestionsResultDto(int Generated, int Approved);
 
 public record QuestionOptionDto(Guid Id, string Text);
 

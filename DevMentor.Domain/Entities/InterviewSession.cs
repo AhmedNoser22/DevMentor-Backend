@@ -1,4 +1,8 @@
-﻿namespace DevMentor.Domain.Entities;
+﻿using DevMentor.Domain.Common;
+using DevMentor.Domain.Enums;
+using DevMentor.Domain.Exceptions;
+
+namespace DevMentor.Domain.Entities;
 
 public record InterviewTurnEvaluation(
     string TechnicalAccuracy,
@@ -32,6 +36,11 @@ public class InterviewSession : BaseEntity
 
     public static InterviewSession Start(Guid userId, TechDomain domain, string firstQuestion)
     {
+        if (string.IsNullOrWhiteSpace(firstQuestion))
+        {
+            throw new DomainRuleException("Cannot start an interview without an opening question");
+        }
+
         return new InterviewSession(userId, domain, firstQuestion);
     }
 
@@ -53,14 +62,16 @@ public class InterviewSession : BaseEntity
         var turn = _turns.FirstOrDefault(t => t.Id == turnId)
             ?? throw new DomainRuleException("This turn does not belong to the session");
 
+        var hasFollowUp = !string.IsNullOrWhiteSpace(evaluation.FollowUpQuestion);
+
         turn.ApplyEvaluation(
             evaluation.TechnicalAccuracy,
             evaluation.MissingConcepts,
             evaluation.Communication,
             evaluation.Score,
-            evaluation.IsFinalTurn ? null : evaluation.FollowUpQuestion);
+            evaluation.IsFinalTurn || !hasFollowUp ? null : evaluation.FollowUpQuestion);
 
-        if (evaluation.IsFinalTurn || turn.Order >= maxTurns)
+        if (evaluation.IsFinalTurn || turn.Order >= maxTurns || !hasFollowUp)
         {
             Conclude();
         }

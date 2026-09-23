@@ -20,6 +20,7 @@ global using QuestPDF.Infrastructure;
 global using DevMentor.Application.Features.Auth.Dtos;
 global using System.Net;
 global using System.Net.Mail;
+global using System.Text.Json.Serialization;
 global using DevMentor.Application.Abstractions.Persistence;
 global using DevMentor.Infrastructure.ExternalAuth;
 global using System.Text.Json;

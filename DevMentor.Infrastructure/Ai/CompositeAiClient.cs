@@ -1,4 +1,8 @@
-﻿namespace DevMentor.Infrastructure.Ai;
+﻿using DevMentor.Application.Abstractions;
+using DevMentor.Domain.Enums;
+using Microsoft.Extensions.Logging;
+
+namespace DevMentor.Infrastructure.Ai;
 
 public class CompositeAiClient : IAiClient
 {
@@ -22,7 +26,7 @@ public class CompositeAiClient : IAiClient
             () => _fallback.GenerateQuestionsAsync(domain, level, count, ct));
     }
 
-    public Task<string> SolveBlindAsync(string questionText, List<string> optionTexts, CancellationToken ct = default)
+    public Task<int> SolveBlindAsync(string questionText, List<string> optionTexts, CancellationToken ct = default)
     {
         return RunWithFallbackAsync(
             () => _fallback.SolveBlindAsync(questionText, optionTexts, ct),

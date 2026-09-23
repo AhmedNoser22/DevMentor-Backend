@@ -1,4 +1,6 @@
-﻿namespace DevMentor.Application.Abstractions;
+﻿using DevMentor.Domain.Enums;
+
+namespace DevMentor.Application.Abstractions;
 
 public record GeneratedOption(string Text, bool IsCorrect);
 
@@ -17,7 +19,7 @@ public record InterviewEvaluationResult(
 public interface IAiClient
 {
     Task<List<GeneratedQuestion>> GenerateQuestionsAsync(TechDomain domain, Level level, int count, CancellationToken ct = default);
-    Task<string> SolveBlindAsync(string questionText, List<string> optionTexts, CancellationToken ct = default);
+    Task<int> SolveBlindAsync(string questionText, List<string> optionTexts, CancellationToken ct = default);
     Task<string> GetFirstInterviewQuestionAsync(TechDomain domain, CancellationToken ct = default);
     Task<InterviewEvaluationResult> EvaluateInterviewTurnAsync(
         TechDomain domain,

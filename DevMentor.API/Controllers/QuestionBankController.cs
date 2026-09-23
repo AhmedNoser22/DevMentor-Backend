@@ -1,4 +1,10 @@
-﻿namespace DevMentor.API.Controllers;
+﻿using DevMentor.Application.Features.QuestionBank;
+using DevMentor.Application.Features.QuestionBank.Dtos;
+using DevMentor.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace DevMentor.API.Controllers;
 
 [Authorize]
 [Route("api/question-bank")]
@@ -12,10 +18,10 @@ public class QuestionBankController : BaseApiController
     }
 
     [HttpPost("generate")]
-    public async Task<ActionResult<int>> Generate(GenerateQuestionsRequest request, CancellationToken ct)
+    public async Task<ActionResult<GenerateQuestionsResultDto>> Generate(GenerateQuestionsRequest request, CancellationToken ct)
     {
-        var approved = await _questionBankService.GenerateAndReviewAsync(request, ct);
-        return Ok(approved);
+        var result = await _questionBankService.GenerateAndReviewAsync(request, ct);
+        return Ok(result);
     }
 
     [HttpGet("by-status/{status}")]

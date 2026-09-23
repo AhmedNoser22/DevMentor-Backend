@@ -1,17 +1,20 @@
-﻿namespace DevMentor.Application.Features.QuestionBank;
+﻿using Microsoft.Extensions.Logging;
+namespace DevMentor.Application.Features.QuestionBank;
 
 public class QuestionBankService : IQuestionBankService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IAiClient _aiClient;
+    private readonly ILogger<QuestionBankService> _logger;
 
-    public QuestionBankService(IUnitOfWork unitOfWork, IAiClient aiClient)
+    public QuestionBankService(IUnitOfWork unitOfWork, IAiClient aiClient, ILogger<QuestionBankService> logger)
     {
         _unitOfWork = unitOfWork;
         _aiClient = aiClient;
+        _logger = logger;
     }
 
-    public async Task<int> GenerateAndReviewAsync(GenerateQuestionsRequest request, CancellationToken ct = default)
+    public async Task<GenerateQuestionsResultDto> GenerateAndReviewAsync(GenerateQuestionsRequest request, CancellationToken ct = default)
     {
         var generated = await _aiClient.GenerateQuestionsAsync(request.Domain, request.Level, request.Count, ct);
         var approvedCount = 0;
@@ -19,21 +22,11 @@ public class QuestionBankService : IQuestionBankService
 
         foreach (var candidate in generated)
         {
-            var correctOption = candidate.Options.FirstOrDefault(o => o.IsCorrect);
-            if (correctOption is null || candidate.Options.Count < 2)
+            var correctIndex = candidate.Options.FindIndex(o => o.IsCorrect);
+            if (correctIndex < 0 || candidate.Options.Count < 2)
             {
                 continue;
             }
-
-            var solvedText = await _aiClient.SolveBlindAsync(
-                candidate.Text,
-                candidate.Options.Select(o => o.Text).ToList(),
-                ct);
-
-            var isValidated = string.Equals(
-                solvedText.Trim(),
-                correctOption.Text.Trim(),
-                StringComparison.OrdinalIgnoreCase);
 
             var question = new Question(request.Domain, request.Level, candidate.Text);
             foreach (var option in candidate.Options)
@@ -41,10 +34,22 @@ public class QuestionBankService : IQuestionBankService
                 question.AddOption(option.Text, option.IsCorrect);
             }
 
-            if (isValidated)
+            try
             {
-                question.Approve();
-                approvedCount++;
+                var solvedIndex = await _aiClient.SolveBlindAsync(
+                    candidate.Text,
+                    candidate.Options.Select(o => o.Text).ToList(),
+                    ct);
+
+                if (solvedIndex == correctIndex)
+                {
+                    question.Approve();
+                    approvedCount++;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Could not validate a generated question, leaving it pending review: {Text}", candidate.Text);
             }
 
             toInsert.Add(question);
@@ -52,7 +57,8 @@ public class QuestionBankService : IQuestionBankService
 
         await _unitOfWork.Questions.AddRangeAsync(toInsert, ct);
         await _unitOfWork.SaveChangesAsync(ct);
-        return approvedCount;
+
+        return new GenerateQuestionsResultDto(toInsert.Count, approvedCount);
     }
 
     public async Task<List<QuestionForReviewDto>> GetByStatusAsync(QuestionStatus status, CancellationToken ct = default)
